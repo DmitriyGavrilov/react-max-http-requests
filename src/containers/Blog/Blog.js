@@ -1,59 +1,48 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
+// import axios from 'axios';
+// import axios from '../../axios';
 
-import Post from '../../components/Post/Post';
-import FullPost from '../../components/FullPost/FullPost';
-import NewPost from '../../components/NewPost/NewPost';
+import Posts from '../Blog/Posts/Posts';
+// import FullPost from './FullPost/FullPost';
+import NewPost from './NewPost/NewPost';
 import './Blog.css';
 
 class Blog extends Component {
-    state = {
-        posts: [],
-        selectedPostId: null
-    }
-
-    componentDidMount() {
-        axios.get('https://jsonplaceholder.typicode.com/posts')
-            .then(response => {
-                const posts = response.data.slice(0, 3);
-                const updatedPosts = posts.map(post => {
-                    return {
-                        ...post,
-                        author: 'Max'
-                    }
-                })
-                this.setState({posts: updatedPosts})
-                // console.log(response);
-            });
-    }
-
-    postSelectedHandler = (id) => {
-        this.setState({selectedPostId: id});
-    }
-
     render () {
-        const posts = this.state.posts.map(post => {
-            return <Post 
-                key={post.id} 
-                title={post.title} 
-                author={post.author}
-                clicked={() => this.postSelectedHandler(post.id)} />; 
-        });
         return (
-            <div>
-                <section className="Posts">
-                    {posts}
-                </section>
-                <section>
-                    <FullPost id={this.state.selectedPostId} />
-                    {/* <FullPost id={this.state.selectedPostId} post={this.state.post} /> */}
-                </section>
-                <section>
-                    <NewPost />
-                </section>
+            <div className="Blog">
+                <header>
+                    <nav>
+                        <ul>
+                            {/* {console.log(this.props.match.url)} */}
+                            <li><NavLink 
+                                exact 
+                                to="/posts"
+                                activeClassName="active"
+                                activeStyle={{color: "blue"}}>Posts</NavLink></li>
+                            <li><NavLink to={{
+                                pathname: '/new-post',
+                                // pathname: this.props.match.url + '/new-post',
+                                hash: '#submit',
+                                search: '?quick-submit=true'
+                            }}>New Post</NavLink></li>
+                        </ul>
+                    </nav>
+                </header>
+                <Route path="/" exact render={() => <h1 style={{textAlign: 'center'}}>Home</h1>} />
+                <Route path="/new-post" exact render={() => <h1 style={{textAlign: 'center'}}>New Post</h1>} />
+                <Route path="/:id" exact render={() => <h1 style={{textAlign: 'center'}}>Post</h1>} />
+                <Switch>
+                    <Route path="/new-post" component={NewPost} />
+                    <Route path="/posts" component={Posts} />
+                    <Redirect from="/" to="/posts" />
+                    {/* <Route path="/" component={Posts} /> */}
+                </Switch>
             </div>
         );
     }
 }
 
+// export default withRouter(Blog);
 export default Blog;

@@ -10,6 +10,10 @@ class NewPost extends Component {
         author: 'Max'
     }
 
+    componentDidMount() {
+        // console.log(this.props);
+    }
+
     postDataHandler = () => {
         const data = {
             title: this.state.title,
@@ -25,7 +29,7 @@ class NewPost extends Component {
     render () {
         return (
             <div className="NewPost">
-                <h1>Add a Post</h1>
+                <h2>Add a Post</h2>
                 <label>Title</label>
                 <input type="text" value={this.state.title} onChange={(event) => this.setState({title: event.target.value})} />
                 <label>Content</label>
